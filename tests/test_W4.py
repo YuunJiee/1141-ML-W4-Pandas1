@@ -16,7 +16,7 @@ if not student_files:
 
 student_file = student_files[0]
 
-# 動態 import 學生檔案
+# 動態 import 學生的程式
 spec = importlib.util.spec_from_file_location("student_submission", student_file)
 student_submission = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(student_submission)
@@ -49,8 +49,8 @@ def test_feature_engineering(sample_df):
     assert df.loc[0, "總分"] == 95+88+78+90+85
 
     # 平均分數
-    assert "平均分數" in df.columns
-    assert df.loc[0, "平均分數"] == pytest.approx((95+88+78+90+85)/5)
+    assert "平均" in df.columns
+    assert df.loc[0, "平均"] == pytest.approx((95+88+78+90+85)/5)
 
     # 是否及格
     assert "是否及格" in df.columns
@@ -83,5 +83,5 @@ def test_save_results(tmp_path, sample_df):
 
     # 讀回檢查欄位
     df_read = pd.read_csv(output_file, encoding='utf-8-sig')
-    for col in ["總分","平均分數","是否及格"]:
+    for col in ["總分","平均","是否及格"]:
         assert col in df_read.columns
