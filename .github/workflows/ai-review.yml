@@ -150,7 +150,7 @@ jobs:
       - name: Run pytest on student submission
         run: |
           mkdir -p test_results
-          pytest submit/*.py --maxfail=1 --disable-warnings -q --tb=short | tee test_results/pytest_output.txt || true
+          pytest test_W4.py --maxfail=1 --disable-warnings -q --tb=short | tee test_results/pytest_output.txt || true
 
       - name: Read pytest output
         id: read_pytest
