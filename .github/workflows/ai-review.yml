@@ -151,6 +151,14 @@ jobs:
           mkdir -p test_results
           pytest submit/*.py --maxfail=1 --disable-warnings -q --tb=short | tee test_results/pytest_output.txt || true
 
+      - name: Read pytest output
+        id: read_pytest
+        run: |
+          cat test_results/pytest_output.txt >> pytest_content.txt
+          echo "content<<EOF" >> $GITHUB_OUTPUT
+          cat pytest_content.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Post pytest results
         uses: peter-evans/create-or-update-comment@v4
         with:
@@ -158,8 +166,8 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             ### 自動測試結果 (pytest)
-            ```
-            $(cat test_results/pytest_output.txt)
+            ```text
+            ${{ steps.read_pytest.outputs.content }}
             ```
 
 
