@@ -30,6 +30,7 @@ jobs:
           set -euo pipefail
 
           ERROR_MSG=""
+
           while IFS= read -r file; do
             if [[ "$file" == "README.md" ]]; then
               ERROR_MSG+="❌ 不可修改 README.md\n"
@@ -40,14 +41,11 @@ jobs:
           done < changed_files.txt
 
           NEW_FILES=$(grep "^submit/" changed_files.txt || true)
-          NEW_COUNT=$(echo "$NEW_FILES" | grep -c ".*" || true)
+          MAIN_FILES=$(echo "$NEW_FILES" | grep -E '^submit/W4_[0-9]{9}\.py$' || true)
+          MAIN_COUNT=$(echo "$MAIN_FILES" | grep -c ".*" || true)
 
-          if [[ $NEW_COUNT -ne 1 ]]; then
-            ERROR_MSG+="❌ 你必須只新增一個檔案在 submit/ 目錄中 (目前 $NEW_COUNT 個)\n"
-          else
-            if ! echo "$NEW_FILES" | grep -qE '^submit/W4_[0-9]{9}\.py$'; then
-              ERROR_MSG+="❌ 新增檔名必須符合 W4_(9位數字).py (目前: $NEW_FILES)\n"
-            fi
+          if [[ $MAIN_COUNT -ne 1 ]]; then
+            ERROR_MSG+="❌ 你必須新增且僅有一個主程式檔 (submit/W4_<學號>.py)\n"
           fi
 
           if [[ -n "$ERROR_MSG" ]]; then
